@@ -1,5 +1,6 @@
 let { Schema, model } = require("mongoose");
 let { default: validator } = require("validator");
+let bcrypt = require("bcryptjs");
 
 let userSchema = new Schema({
   username: {
@@ -49,6 +50,18 @@ let userSchema = new Schema({
       default: "user",
     },
   },
+});
+
+//hash password
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  let hash = await bcrypt.hash(this.password, 12);
+  this.password = hash;
+  this.passwordConfirm = undefined;
+  next();
 });
 
 let User = model("User", userSchema);
