@@ -1,10 +1,8 @@
 let express = require("express");
+let usersRouter = require("./routes/userRoutes");
+
 let app = express();
 
-app.get("/", (req, res) => {
-  res.send({
-    msg: "hello world!",
-  });
-});
+app.use("/api/v1/users", usersRouter);
 
 module.exports = app;
