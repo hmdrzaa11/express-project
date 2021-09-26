@@ -48,8 +48,8 @@ let userSchema = new Schema(
       enum: {
         values: ["user", "admin"],
         message: "invalid role",
-        default: "user",
       },
+      default: "user",
     },
   },
   {
