@@ -41,3 +41,40 @@ exports.signin = catchAsync(async (req, res, next) => {
   //all good send token
   createAndSendToken(user, 200, res);
 });
+
+exports.protect = catchAsync(async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers["authorization"] &&
+    req.headers["authorization"].startsWith("Bearer")
+  ) {
+    token = req.headers["authorization"].split(" ")[1];
+  }
+
+  if (!token)
+    return next(
+      new AppError("you are not logged in , please login to get access", 401)
+    );
+
+  // verify the token
+  let { id, iat } = jwt.verify(token, process.env.JWT_SECRET);
+
+  // find user
+  let user = await User.findById(id);
+
+  if (!user)
+    return next(
+      new AppError("the user belong to this token no longer exists", 401)
+    );
+
+  //check if user changed password after token was issued
+  if (user.isPasswordChangedRecently(iat)) {
+    return next(
+      new AppError("user recently changed password ,please login again", 401)
+    );
+  }
+
+  req.user = user;
+  next();
+});
