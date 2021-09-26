@@ -81,8 +81,8 @@ userSchema.methods.correctPassword = async function (rawPass) {
 //check to see if password changed recently
 userSchema.methods.isPasswordChangedRecently = function (jwtTime) {
   if (!this.passwordChangedAt) return false;
-  let passwordChangeAt = parseInt(jwtTime) / 1000;
-  return passwordChangeAt > jwtTime;
+  let passwordChangedAt = parseInt(this.passwordChangedAt.getTime() / 1000);
+  return passwordChangedAt > jwtTime;
 };
 
 let User = model("User", userSchema);
