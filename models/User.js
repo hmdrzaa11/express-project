@@ -78,6 +78,13 @@ userSchema.methods.correctPassword = async function (rawPass) {
   return await bcrypt.compare(rawPass, this.password);
 };
 
+//check to see if password changed recently
+userSchema.methods.isPasswordChangedRecently = function (jwtTime) {
+  if (!this.passwordChangedAt) return false;
+  let passwordChangeAt = parseInt(jwtTime) / 1000;
+  return passwordChangeAt > jwtTime;
+};
+
 let User = model("User", userSchema);
 
 module.exports = User;
