@@ -73,6 +73,11 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+//method for checking password
+userSchema.methods.correctPassword = async function (rawPass) {
+  return await bcrypt.compare(rawPass, this.password);
+};
+
 let User = model("User", userSchema);
 
 module.exports = User;
