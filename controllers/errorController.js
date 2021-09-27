@@ -17,8 +17,16 @@ let handleDuplicatedValues = (err) => {
   );
 };
 
+let handleValidationError = (err) => {
+  let messages = Object.keys(err.errors)
+    .map((key) => err.errors[key].message)
+    .join(" , ");
+  return new AppError(messages, 400);
+};
+
 let sendErrorProduction = (err, res) => {
   //if the error comes from the AppError is clean to go
+
   if (err.isOperational) {
     return res.status(err.statusCode).json({
       status: err.status,
@@ -38,13 +46,10 @@ module.exports = (err, req, res, next) => {
   err.status = err.status || "error";
 
   if (process.env.NODE_ENV === "development") {
-    console.log("here");
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === "production") {
-    let error = { ...err };
-    //to copy the message also
-    error.message = err.message;
-    if (error.code === 11000) error = handleDuplicatedValues(error);
-    sendErrorProduction(error, res);
+    if (err.code === 11000) err = handleDuplicatedValues(err);
+    if (err.name === "ValidationError") err = handleValidationError(err);
+    sendErrorProduction(err, res);
   }
 };
