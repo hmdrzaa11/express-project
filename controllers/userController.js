@@ -89,3 +89,15 @@ exports.restrictTo = (...roles) => {
     next();
   };
 };
+
+exports.updatePassword = catchAsync(async (req, res, next) => {
+  let { password, newPassword, passwordConfirm } = req.body;
+  let user = await User.findById(req.user.id);
+  //check if the password is correct
+  let isPasswordCorrect = await user.correctPassword(password);
+  if (!isPasswordCorrect) return next(new AppError("wrong password", 401));
+  user.password = newPassword;
+  user.passwordConfirm = passwordConfirm;
+  await user.save();
+  createAndSendToken(user, 200, res);
+});

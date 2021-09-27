@@ -85,6 +85,13 @@ userSchema.methods.isPasswordChangedRecently = function (jwtTime) {
   return passwordChangedAt > jwtTime;
 };
 
+//pre-save check for passwordChangedAt
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password") || this.isNew) return next();
+  this.passwordChangedAt = new Date() - 1000; //make sure this time be less then JWT that will be generated after
+  next();
+});
+
 let User = model("User", userSchema);
 
 module.exports = User;
