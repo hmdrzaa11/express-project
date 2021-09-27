@@ -1,5 +1,6 @@
 let router = require("express").Router();
 let tourController = require("../controllers/tourController");
+let userController = require("../controllers/userController");
 
 router
   .route("/")
@@ -9,6 +10,10 @@ router
 router
   .route("/:tourId")
   .get(tourController.getSingleTour)
-  .patch(tourController.updateTour);
+  .patch(
+    userController.protect,
+    userController.restrictTo("admin"),
+    tourController.updateTour
+  );
 
 module.exports = router;
