@@ -21,3 +21,14 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getSingleTour = catchAsync(async (req, res, next) => {
+  let tour = await Tour.findById(req.params.tourId);
+  if (!tour) return next(new AppError("tour not found", 404));
+  res.status(200).json({
+    status: "success",
+    data: {
+      tour,
+    },
+  });
+});
