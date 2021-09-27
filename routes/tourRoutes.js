@@ -2,6 +2,8 @@ let router = require("express").Router();
 let tourController = require("../controllers/tourController");
 let userController = require("../controllers/userController");
 
+router.get("/stats", tourController.getTourStats);
+
 router
   .route("/")
   .post(tourController.createTour)
