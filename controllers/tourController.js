@@ -32,3 +32,17 @@ exports.getSingleTour = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.updateTour = catchAsync(async (req, res, next) => {
+  let tour = await Tour.findByIdAndUpdate(req.params.tourId, req.body, {
+    runValidators: true,
+    new: true,
+  });
+  if (!tour) return next(new AppError("tour not found", 404));
+  res.json({
+    status: "success",
+    data: {
+      tour,
+    },
+  });
+});
