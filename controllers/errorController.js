@@ -17,6 +17,11 @@ let handleDuplicatedValues = (err) => {
   );
 };
 
+let handleCastIdError = (err) => {
+  let message = `Invalid ${err.path} : ${err.values} `;
+  return new AppError(message, 400);
+};
+
 let handleValidationError = (err) => {
   let messages = Object.keys(err.errors)
     .map((key) => err.errors[key].message)
@@ -50,6 +55,7 @@ module.exports = (err, req, res, next) => {
   } else if (process.env.NODE_ENV === "production") {
     if (err.code === 11000) err = handleDuplicatedValues(err);
     if (err.name === "ValidationError") err = handleValidationError(err);
+    if (err.name === "CastError") err = handleCastIdError(err);
     sendErrorProduction(err, res);
   }
 };
