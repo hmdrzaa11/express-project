@@ -1,7 +1,8 @@
 let express = require("express");
-let usersRouter = require("./routes/userRoutes");
 let AppError = require("./utils/apiErrors");
 let globalErrorHandler = require("./controllers/errorController");
+let usersRouter = require("./routes/userRoutes");
+let tourRouter = require("./routes/tourRoutes");
 
 let app = express();
 
@@ -9,6 +10,7 @@ let app = express();
 app.use(express.json());
 
 app.use("/api/v1/users", usersRouter);
+app.use("/api/v1/tours", tourRouter);
 
 //404 route
 app.all("*", (req, res, next) => {
