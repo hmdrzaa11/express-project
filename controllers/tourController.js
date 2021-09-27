@@ -11,3 +11,13 @@ exports.createTour = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.getAllTours = catchAsync(async (req, res, next) => {
+  let allTours = await Tour.find();
+  res.status(200).json({
+    status: "success",
+    data: {
+      tours: allTours,
+    },
+  });
+});
