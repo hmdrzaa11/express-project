@@ -1,4 +1,5 @@
 let { Schema, model } = require("mongoose");
+let { default: slugify } = require("slugify");
 
 let tourSchema = new Schema({
   name: {
@@ -96,6 +97,11 @@ let tourSchema = new Schema({
       day: Number,
     },
   ],
+});
+
+tourSchema.pre("save", function (next) {
+  this.slug = slugify(this.title, { lower: true });
+  next();
 });
 
 let Tour = model("Tour", tourSchema);
