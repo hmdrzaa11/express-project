@@ -1,3 +1,5 @@
+let AppError = require("../utils/apiErrors");
+
 let sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -5,6 +7,14 @@ let sendErrorDev = (err, res) => {
     err: err,
     stack: err.stack,
   });
+};
+
+let handleDuplicatedValues = (err) => {
+  let duplicatedValue = err.message.match(/(["'])(\\?.)*?\1/)[0];
+  return new AppError(
+    `duplicated value : ${duplicatedValue}, please provide another value`,
+    400
+  );
 };
 
 let sendErrorProduction = (err, res) => {
@@ -34,7 +44,7 @@ module.exports = (err, req, res, next) => {
     let error = { ...err };
     //to copy the message also
     error.message = err.message;
-
-    sendErrorProduction(err, res);
+    if (error.code === 11000) error = handleDuplicatedValues(error);
+    sendErrorProduction(error, res);
   }
 };
