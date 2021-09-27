@@ -114,6 +114,16 @@ tourSchema.virtual("durationInWeeks").get(function () {
   return Math.floor(this.duration / 7);
 });
 
+//remove secret tour from aggregation
+tourSchema.pre("aggregate", function (next) {
+  this.pipeline().unshift({
+    $match: {
+      secretTour: { $ne: true },
+    },
+  });
+  next();
+});
+
 let Tour = model("Tour", tourSchema);
 
 module.exports = Tour;

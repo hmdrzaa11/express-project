@@ -50,11 +50,6 @@ exports.updateTour = catchAsync(async (req, res, next) => {
 exports.getTourStats = catchAsync(async (req, res, next) => {
   let stats = await Tour.aggregate([
     {
-      $match: {
-        secretTour: { $ne: true },
-      },
-    },
-    {
       $group: {
         _id: "$difficulty",
         total: { $sum: 1 },
