@@ -51,6 +51,10 @@ let userSchema = new Schema(
       },
       default: "user",
     },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     toJSON: {
@@ -90,6 +94,11 @@ userSchema.pre("save", async function (next) {
   if (!this.isModified("password") || this.isNew) return next();
   this.passwordChangedAt = new Date() - 1000; //make sure this time be less then JWT that will be generated after
   next();
+});
+
+//exclude delete users
+userSchema.pre(/^find/, function (next) {
+  this.find({});
 });
 
 let User = model("User", userSchema);
