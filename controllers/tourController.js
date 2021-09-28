@@ -1,6 +1,7 @@
 let catchAsync = require("../utils/catchAsync");
 let AppError = require("../utils/apiErrors");
 let Tour = require("../models/Tour");
+let ApiFeatures = require("../utils/ApiFeature");
 
 exports.createTour = catchAsync(async (req, res, next) => {
   let tour = await Tour.create(req.body);
@@ -13,7 +14,10 @@ exports.createTour = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllTours = catchAsync(async (req, res, next) => {
-  let allTours = await Tour.find();
+  let api = new ApiFeatures(Tour.find(), req.query);
+
+  let allTours = await api.filter().sort().limitFields().paginate()
+    .mongooseQuery;
   res.status(200).json({
     status: "success",
     data: {
