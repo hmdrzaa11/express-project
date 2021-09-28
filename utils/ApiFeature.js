@@ -30,4 +30,14 @@ module.exports = class ApiFeatures {
     }
     return this;
   }
+
+  limitFields() {
+    if (this.queryParams.limit) {
+      let fields = this.queryParams.limit.split(",").join(" ");
+      this.mongooseQuery = this.mongooseQuery.select(fields);
+    } else {
+      this.mongooseQuery = this.mongooseQuery.select("-__v");
+    }
+    return this;
+  }
 };
