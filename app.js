@@ -1,6 +1,7 @@
 let express = require("express");
 let rateLimit = require("express-rate-limit");
 let mongoSanitizer = require("express-mongo-sanitize");
+let xss = require("xss-clean");
 let helmet = require("helmet");
 let AppError = require("./utils/apiErrors");
 let globalErrorHandler = require("./controllers/errorController");
@@ -22,6 +23,7 @@ app.use(
 app.use(express.json({ limit: "10kb" }));
 
 app.use(mongoSanitizer());
+app.use(xss());
 
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/tours", tourRouter);
