@@ -18,7 +18,7 @@ app.use(
     message: "to many request from this IP, please try in 1 hour later",
   })
 );
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
 
 app.use("/api/v1/users", usersRouter);
 app.use("/api/v1/tours", tourRouter);
