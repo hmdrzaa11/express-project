@@ -98,7 +98,11 @@ userSchema.pre("save", async function (next) {
 
 //exclude delete users
 userSchema.pre(/^find/, function (next) {
-  this.find({});
+  this.find({
+    active: {
+      $ne: false,
+    },
+  });
 });
 
 let User = model("User", userSchema);
