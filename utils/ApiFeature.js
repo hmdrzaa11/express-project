@@ -20,4 +20,14 @@ module.exports = class ApiFeatures {
     this.mongooseQuery = this.mongooseQuery.find(filterObj);
     return this;
   }
+
+  sort() {
+    if (this.queryParams.sort) {
+      let sortString = this.queryParams.sort.split(",").join(" ");
+      this.mongooseQuery = this.mongooseQuery.sort(sortString);
+    } else {
+      this.mongooseQuery = this.mongooseQuery.sort("-createdAt");
+    }
+    return this;
+  }
 };
