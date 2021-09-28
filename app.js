@@ -1,5 +1,6 @@
 let express = require("express");
 let rateLimit = require("express-rate-limit");
+let helmet = require("helmet");
 let AppError = require("./utils/apiErrors");
 let globalErrorHandler = require("./controllers/errorController");
 let usersRouter = require("./routes/userRoutes");
@@ -8,6 +9,7 @@ let tourRouter = require("./routes/tourRoutes");
 let app = express();
 
 //middlewares
+app.use(helmet());
 
 app.use(
   rateLimit({
