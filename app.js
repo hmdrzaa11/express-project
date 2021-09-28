@@ -34,7 +34,7 @@ app.use("/api/v1/tours", tourRouter);
 
 //404 route
 app.all("*", (req, res, next) => {
-  next(new AppError(`Can not file ${req.originalUrl} on this server`, 404));
+  next(new AppError(`Can not find ${req.originalUrl} on this server`, 404));
 });
 
 //global error handler
