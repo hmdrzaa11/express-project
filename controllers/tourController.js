@@ -69,3 +69,25 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+exports.addGuidesToTour = catchAsync(async (req, res, next) => {
+  let tourId = req.params.tourId;
+  let userId = req.params.userId;
+  let tour = await Tour.findByIdAndUpdate(
+    tourId,
+    {
+      $push: { guides: [userId] },
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  if (!tour) return next(new AppError("no tour with this ID", 404));
+  res.status(200).json({
+    status: "success",
+    data: {
+      tour,
+    },
+  });
+});

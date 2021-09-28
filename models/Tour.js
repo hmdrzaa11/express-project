@@ -85,6 +85,7 @@ let tourSchema = new Schema(
       address: String,
       description: String,
     },
+    guides: [{ type: Schema.Types.ObjectId, ref: "User" }],
     locations: [
       {
         type: {

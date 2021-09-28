@@ -18,4 +18,6 @@ router
     tourController.updateTour
   );
 
+router.get("/add-guide/:tourId/:userId", tourController.addGuidesToTour);
+
 module.exports = router;
